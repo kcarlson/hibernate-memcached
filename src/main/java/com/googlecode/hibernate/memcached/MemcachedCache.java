@@ -14,7 +14,6 @@
  */
 package com.googlecode.hibernate.memcached;
 
-import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ import java.util.Map;
  *
  * @author Ray Krueger
  */
-public class MemcachedCache implements Cache {
+public class MemcachedCache {
 
     private final Logger log = LoggerFactory.getLogger(MemcachedCache.class);
 

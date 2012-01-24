@@ -14,9 +14,9 @@
  */
 package com.googlecode.hibernate.memcached;
 
-import org.hibernate.cache.Cache;
+//import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.CacheProvider;
+//import org.hibernate.cache.CacheProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,13 +81,13 @@ import java.util.Properties;
  *
  * @author Ray Krueger
  */
-public class MemcachedCacheProvider implements CacheProvider {
+public class MemcachedCacheProvider /*implements CacheProvider*/ {
 
     private final Logger log = LoggerFactory.getLogger(MemcachedCacheProvider.class);
 
     private Memcache client;
 
-    public Cache buildCache(String regionName, Properties properties) throws CacheException {
+    public MemcachedCache buildCache(String regionName, Properties properties) throws CacheException {
 
         Config config = new Config(new PropertiesHelper(properties));
 
