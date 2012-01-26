@@ -1,19 +1,12 @@
 package com.googlecode.hibernate.memcached.spymemcached;
 
-import net.spy.memcached.AddrUtil;
-import net.spy.memcached.BinaryConnectionFactory;
-import net.spy.memcached.ConnectionFactory;
-import net.spy.memcached.DefaultConnectionFactory;
-import net.spy.memcached.HashAlgorithm;
-import net.spy.memcached.KetamaConnectionFactory;
-import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.auth.AuthDescriptor;
-import net.spy.memcached.auth.PlainCallbackHandler;
-
 import com.googlecode.hibernate.memcached.Config;
 import com.googlecode.hibernate.memcached.Memcache;
 import com.googlecode.hibernate.memcached.MemcacheClientFactory;
 import com.googlecode.hibernate.memcached.PropertiesHelper;
+import net.spy.memcached.*;
+import net.spy.memcached.auth.AuthDescriptor;
+import net.spy.memcached.auth.PlainCallbackHandler;
 
 /**
  * Parses hibernate properties to produce a MemcachedClient.<br/>

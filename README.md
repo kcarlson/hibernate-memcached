@@ -11,6 +11,15 @@ If you have any questions, or just want to drop a line to say it's working great
 Please note that this is an open source project. I work on it when I can and I implement what I feel like. I am volunteering my own free time for my own amusement.
 
 # Versions
+## 1.5
+  * Compatible with hibernate 4.
+  * Example config:
+
+    <property name="hibernate.cache.region.factory_class">com.googlecode.hibernate.memcached.MemcachedRegionFactory</property>
+    <property name="hibernate.memcached.operationTimeout">5000</property>
+    <property name="hibernate.memcached.connectionFactory">KetamaConnectionFactory</property>
+    <property name="hibernate.memcached.hashAlgorithm">HashAlgorithm.FNV1_64_HASH</property>
+
 ## 1.3
   * [HashCodeKeyStrategy][1] [StringKeyStrategy][2] are now both deprecated.
   * [Sha1KeyStrategy][3] is now the default strategy.

@@ -152,7 +152,7 @@ public class AbstractReadWriteMemcachedAccessStrategy <T extends AbstractMemcach
      */
     protected void handleLockExpiry(Object key, Lockable lock) {
         log.warn("Cache " + region.getName() + " Key " + key + " Lockable : " + lock + "\n"
-                + "A soft-locked cache entry was expired by the underlying Ehcache. "
+                + "A soft-locked cache entry was expired by the underlying Memcache. "
                 + "If this happens regularly you should consider increasing the cache timeouts and/or capacity limits");
         long ts = region.nextTimestamp() + region.getTimeout();
         // create new lock that times out immediately
@@ -165,14 +165,14 @@ public class AbstractReadWriteMemcachedAccessStrategy <T extends AbstractMemcach
      * Read lock the entry for the given key if internal cache locks will not provide correct exclusion.
      */
     private void readLockIfNeeded(Object key) {
-            region.getCache().lock(key);
+        region.getCache().lock(key);
     }
  
     /**
      * Read unlock the entry for the given key if internal cache locks will not provide correct exclusion.
      */
     private void readUnlockIfNeeded(Object key) {
-            region.getCache().unlock(key);
+        region.getCache().unlock(key);
     }
  
     /**
@@ -381,6 +381,7 @@ public class AbstractReadWriteMemcachedAccessStrategy <T extends AbstractMemcach
         /**
          * {@inheritDoc}
          */
+        @Override
         public String toString() {
             StringBuilder sb = new StringBuilder("Lock Source-UUID:" + sourceUuid + " Lock-ID:" + lockId);
             return sb.toString();

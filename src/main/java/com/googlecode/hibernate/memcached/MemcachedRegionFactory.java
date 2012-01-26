@@ -136,6 +136,7 @@ public class MemcachedRegionFactory implements RegionFactory {
     
     private MemcachedCache getCache(String regionName)
     {
-        return caches.get(regionName);
+        return caches.get(regionName) == null
+                ? new MemcachedCache(regionName, client) : caches.get(regionName);
     }
 }
