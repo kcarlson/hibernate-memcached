@@ -15,10 +15,10 @@ Please note that this is an open source project. I work on it when I can and I i
   * Compatible with hibernate 4.
   * Example config:
 
-    ``<property name="hibernate.cache.region.factory_class">com.googlecode.hibernate.memcached.MemcachedRegionFactory</property>
-    <property name="hibernate.memcached.operationTimeout">5000</property>
-    <property name="hibernate.memcached.connectionFactory">KetamaConnectionFactory</property>
-    <property name="hibernate.memcached.hashAlgorithm">HashAlgorithm.FNV1_64_HASH</property>``
+    ``<property name="hibernate.cache.region.factory_class">com.googlecode.hibernate.memcached.MemcachedRegionFactory</property>``
+    ``<property name="hibernate.memcached.operationTimeout">5000</property>``
+    ``<property name="hibernate.memcached.connectionFactory">KetamaConnectionFactory</property>``
+    ``<property name="hibernate.memcached.hashAlgorithm">HashAlgorithm.FNV1_64_HASH</property>``
 
 ## 1.3
   * [HashCodeKeyStrategy][1] [StringKeyStrategy][2] are now both deprecated.
