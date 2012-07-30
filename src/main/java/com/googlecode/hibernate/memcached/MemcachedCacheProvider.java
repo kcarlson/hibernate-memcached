@@ -128,7 +128,7 @@ public class MemcachedCacheProvider implements CacheProvider {
 
     protected KeyStrategy instantiateKeyStrategy(String cls) {
         try {
-            return (KeyStrategy) Class.forName(cls).newInstance();
+            return (KeyStrategy) Thread.currentThread().getContextClassLoader().loadClass(cls).newInstance();
         } catch (InstantiationException e) {
             throw new CacheException("Could not instantiate keyStrategy class", e);
         } catch (IllegalAccessException e) {
@@ -162,7 +162,7 @@ public class MemcachedCacheProvider implements CacheProvider {
 
         Constructor<?> constructor;
         try {
-            constructor = Class.forName(factoryClassName)
+            constructor = Thread.currentThread().getContextClassLoader().loadClass(factoryClassName)
                     .getConstructor(PropertiesHelper.class);
         } catch (ClassNotFoundException e) {
             throw new CacheException(
