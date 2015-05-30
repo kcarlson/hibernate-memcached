@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class MemcachedRegionFactory implements RegionFactory {
 
-    private final Logger log = LoggerFactory.getLogger(MemcachedCacheProvider.class);
+    private final Logger log = LoggerFactory.getLogger(MemcachedRegionFactory.class);
 
     private final ConcurrentMap<String, MemcachedCache> caches = new ConcurrentHashMap<String, MemcachedCache>();
 

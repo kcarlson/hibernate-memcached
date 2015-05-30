@@ -16,20 +16,19 @@ package com.googlecode.hibernate.memcached.region;
 
 import com.googlecode.hibernate.memcached.Memcache;
 import com.googlecode.hibernate.memcached.MemcachedCache;
-import com.googlecode.hibernate.memcached.MemcachedCacheProvider;
-import java.util.Properties;
-
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.TimestampsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 /**
  *
  * @author kcarlson
  */
 public class MemcachedTimestampsRegion extends AbstractMemcachedRegion implements TimestampsRegion {
     
-    private final Logger log = LoggerFactory.getLogger(MemcachedCacheProvider.class);
+    private final Logger log = LoggerFactory.getLogger(MemcachedTimestampsRegion.class);
 
     public MemcachedTimestampsRegion(MemcachedCache cache, Properties properties, Memcache client) {
         super(cache);

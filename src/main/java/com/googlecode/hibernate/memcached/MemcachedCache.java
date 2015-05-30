@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Wrapper around MemcachedClient instance to provide the bridge between Hiberante and Memcached.
- * Uses the regionName given by Hibernate via the {@link com.googlecode.hibernate.memcached.MemcachedCacheProvider}
+ * Wrapper around MemcachedClient instance to provide the bridge between Hibernate and Memcached.
+ * Uses the regionName given by Hibernate via the {@link com.googlecode.hibernate.memcached.MemcachedRegionFactory}
  * when generating cache keys.
  * All cache operations rely on using a {@link com.googlecode.hibernate.memcached.KeyStrategy}
  * to generate cache keys for use in memcached.
