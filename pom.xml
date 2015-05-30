@@ -17,14 +17,15 @@
     </licenses>
 
     <properties>
+        <hibernate-core.version>4.3.10.Final</hibernate-core.version>
+        <spymemcached.version>2.11.6</spymemcached.version>
+        <slf4j-api.version>1.5.6</slf4j-api.version>
+
+        <junit.version>4.4</junit.version>
         <gmaven.version>1.5</gmaven.version>
         <groovy.version>1.6.3</groovy.version>
         <hsqldb.version>2.3.2</hsqldb.version>
-        <hibernate-core.version>4.0.1.Final</hibernate-core.version>
-        <junit.version>4.4</junit.version>
-        <slf4j-api.version>1.5.6</slf4j-api.version>
         <slf4j-log4j12.version>1.5.6</slf4j-log4j12.version>
-        <spymemcached.version>2.11.6</spymemcached.version>
     </properties>
 
     <scm>
