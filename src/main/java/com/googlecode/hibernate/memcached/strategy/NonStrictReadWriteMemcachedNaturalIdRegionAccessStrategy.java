@@ -17,7 +17,6 @@ package com.googlecode.hibernate.memcached.strategy;
 
 import com.googlecode.hibernate.memcached.region.MemcachedNaturalIdRegion;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
@@ -32,10 +31,6 @@ public class NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy
      */
     public NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy(MemcachedNaturalIdRegion region, Settings settings) {
         super(region, settings);
-    }
-
-    public NaturalIdRegion getRegion() {
-        return region;
     }
 
     public Object get(Object key, long txTimestamp) throws CacheException {

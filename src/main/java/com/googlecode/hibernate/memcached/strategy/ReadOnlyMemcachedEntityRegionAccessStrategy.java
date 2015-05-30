@@ -1,34 +1,32 @@
-/*
- * -----------------------------------------------------------------------------
- * Copyright (C) 2008-2011 by Bloo AB
- * SWEDEN, e-mail: info@bloo.se
+/* Copyright 2015, the original author or authors.
  *
- * This program may be used and/or copied only with the written permission
- * from Bloo AB, or in accordance with the terms and
- * conditions stipulated in the agreement/contract under which the program
- * has been supplied.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * All rights reserved.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * -----------------------------------------------------------------------------
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
 import com.googlecode.hibernate.memcached.region.MemcachedEntityRegion;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-/**
- *
- * @author kcarlson
- */
-public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityRegionAccessStrategy
-{
+public class ReadOnlyMemcachedEntityRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedEntityRegion>
+        implements EntityRegionAccessStrategy {
 
-    public ReadOnlyMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion aThis, Settings settings)
-    {
-        super(aThis, settings);
+    public ReadOnlyMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion region, Settings settings) {
+        super(region, settings);
     }
 
     /**
@@ -37,7 +35,7 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
     public Object get(Object key, long txTimestamp) throws CacheException {
         return region.getCache().get(key);
     }
- 
+
     /**
      * {@inheritDoc}
      */
@@ -50,7 +48,7 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
             return true;
         }
     }
- 
+
     /**
      * Throws UnsupportedOperationException since this cache is read-only
      *
@@ -59,21 +57,21 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
     public SoftLock lockItem(Object key, Object version) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Can't write to a readonly object");
     }
- 
+
     /**
      * A no-op since this cache is read-only
      */
     public void unlockItem(Object key, SoftLock lock) throws CacheException {
         //throw new UnsupportedOperationException("Can't write to a readonly object");
     }
- 
+
     /**
      * This cache is asynchronous hence a no-op
      */
     public boolean insert(Object key, Object value, Object version) throws CacheException {
         return false;
     }
- 
+
     /**
      * {@inheritDoc}
      */
@@ -81,7 +79,7 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
         region.getCache().put(key, value);
         return true;
     }
- 
+
     /**
      * Throws UnsupportedOperationException since this cache is read-only
      *
@@ -90,7 +88,7 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
     public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Can't write to a readonly object");
     }
- 
+
     /**
      * Throws UnsupportedOperationException since this cache is read-only
      *
@@ -100,5 +98,5 @@ public class ReadOnlyMemcachedEntityRegionAccessStrategy extends AbstractEntityR
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Can't write to a readonly object");
     }
-    
+
 }

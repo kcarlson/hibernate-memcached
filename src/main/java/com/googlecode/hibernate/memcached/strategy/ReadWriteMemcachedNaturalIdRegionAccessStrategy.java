@@ -18,7 +18,6 @@ package com.googlecode.hibernate.memcached.strategy;
 import com.googlecode.hibernate.memcached.region.MemcachedNaturalIdRegion;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
-import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
@@ -27,15 +26,8 @@ public class ReadWriteMemcachedNaturalIdRegionAccessStrategy
         extends AbstractReadWriteMemcachedAccessStrategy<MemcachedNaturalIdRegion>
         implements NaturalIdRegionAccessStrategy {
 
-    /**
-     * Creates a read/write cache access strategy around the given cache region.
-     */
     public ReadWriteMemcachedNaturalIdRegionAccessStrategy(MemcachedNaturalIdRegion region, Settings settings, CacheDataDescription metadata) {
         super(region, settings, metadata);
-    }
-
-    public NaturalIdRegion getRegion() {
-        return region;
     }
 
     public boolean insert(Object key, Object value) throws CacheException {

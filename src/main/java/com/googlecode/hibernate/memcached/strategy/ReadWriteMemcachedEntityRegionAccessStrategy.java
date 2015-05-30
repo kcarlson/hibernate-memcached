@@ -1,53 +1,39 @@
-/*
- * -----------------------------------------------------------------------------
- * Copyright (C) 2008-2011 by Bloo AB
- * SWEDEN, e-mail: info@bloo.se
+/* Copyright 2015, the original author or authors.
  *
- * This program may be used and/or copied only with the written permission
- * from Bloo AB, or in accordance with the terms and
- * conditions stipulated in the agreement/contract under which the program
- * has been supplied.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * All rights reserved.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * -----------------------------------------------------------------------------
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
-import com.googlecode.hibernate.memcached.region.AbstractMemcachedRegion;
 import com.googlecode.hibernate.memcached.region.MemcachedEntityRegion;
-import com.googlecode.hibernate.memcached.strategy.AbstractReadWriteMemcachedAccessStrategy;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-/**
- *
- * @author kcarlson
- */
-public class ReadWriteMemcachedEntityRegionAccessStrategy 
-        extends AbstractReadWriteMemcachedAccessStrategy<AbstractMemcachedRegion> implements EntityRegionAccessStrategy
-{
+public class ReadWriteMemcachedEntityRegionAccessStrategy
+        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedEntityRegion>
+        implements EntityRegionAccessStrategy {
 
-    public ReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion aThis, Settings settings)
-    {
-        super(aThis, settings, aThis.getCacheDataDescription());
+    public ReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion region, Settings settings) {
+        super(region, settings, region.getCacheDataDescription());
     }
 
-    public EntityRegion getRegion()
-    {
-        return (MemcachedEntityRegion)region;
-    }
-
-    public boolean insert(Object key, Object value, Object version) throws CacheException
-    {
+    public boolean insert(Object key, Object value, Object version) throws CacheException {
         return false;
     }
 
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException
-    {
+    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
         region.getCache().lock(key);
         try {
             Lockable item = (Lockable) region.getCache().get(key);
@@ -62,13 +48,11 @@ public class ReadWriteMemcachedEntityRegionAccessStrategy
         }
     }
 
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
-    {
+    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
         return false;
     }
 
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
-    {
+    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
         //what should we do with previousVersion here?
         region.getCache().lock(key);
         try {
@@ -91,6 +75,5 @@ public class ReadWriteMemcachedEntityRegionAccessStrategy
             region.getCache().unlock(key);
         }
     }
-    
-   
+
 }

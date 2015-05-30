@@ -24,9 +24,9 @@ import net.spy.memcached.auth.AuthDescriptor;
 import net.spy.memcached.auth.PlainCallbackHandler;
 
 /**
- * Parses hibernate properties to produce a MemcachedClient.<br/>
+ * Parses hibernate properties to produce a MemcachedClient.
  *
- *  @author Ray Krueger
+ * @author Ray Krueger
  */
 public class SpyMemcacheClientFactory implements MemcacheClientFactory {
 

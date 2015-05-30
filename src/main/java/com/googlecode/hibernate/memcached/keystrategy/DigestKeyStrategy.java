@@ -12,19 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.googlecode.hibernate.memcached.keystrategy;
 
-package com.googlecode.hibernate.memcached.strategy;
+/**
+ * @author Ray Krueger
+ */
+public abstract class DigestKeyStrategy extends AbstractKeyStrategy {
 
-import com.googlecode.hibernate.memcached.region.MemcachedCollectionRegion;
-import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
-import org.hibernate.cfg.Settings;
-
-public class ReadWriteMemcachedCollectionRegionAccessStrategy
-        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedCollectionRegion>
-        implements CollectionRegionAccessStrategy {
-
-    public ReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion region, Settings settings) {
-        super(region, settings, region.getCacheDataDescription());
+    protected String transformKeyObject(Object key) {
+        return key.toString() + ":" + key.hashCode();
     }
 
+    protected String concatenateKey(String regionName, long clearIndex, Object key) {
+        String longKey = super.concatenateKey(regionName, clearIndex, key);
+        return digest(longKey);
+    }
+
+    protected abstract String digest(String string);
 }

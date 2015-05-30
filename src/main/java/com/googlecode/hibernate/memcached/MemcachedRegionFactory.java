@@ -93,11 +93,11 @@ public class MemcachedRegionFactory implements RegionFactory {
     }
 
     public QueryResultsRegion buildQueryResultsRegion(String regionName, Properties properties) throws CacheException {
-        return new MemcachedQueryResultsRegion(getCache(regionName), properties, client);
+        return new MemcachedQueryResultsRegion(getCache(regionName));
     }
 
     public TimestampsRegion buildTimestampsRegion(String regionName, Properties properties) throws CacheException {
-        return new MemcachedTimestampsRegion(getCache(regionName), properties, client);
+        return new MemcachedTimestampsRegion(getCache(regionName));
     }
 
     protected MemcacheClientFactory getMemcachedClientFactory(Config config) {

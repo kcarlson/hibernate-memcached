@@ -1,4 +1,4 @@
-/* Copyright 2015, original authors
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,17 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
 import com.googlecode.hibernate.memcached.region.MemcachedEntityRegion;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
 /**
  * Based on Ehcache specific non-strict read/write entity region access strategy.
  */
-public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends AbstractEntityRegionAccessStrategy {
+public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedEntityRegion>
+        implements EntityRegionAccessStrategy {
 
     /**
      * Create a non-strict read/write access strategy accessing the given collection region.
@@ -51,7 +55,7 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Since this is a non-strict read/write strategy item locking is not used.
      */
     public SoftLock lockItem(Object key, Object version) throws CacheException {
@@ -60,7 +64,7 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Since this is a non-strict read/write strategy item locking is not used.
      */
     public void unlockItem(Object key, SoftLock lock) throws CacheException {
@@ -69,7 +73,7 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Returns <code>false</code> since this is an asynchronous cache access strategy.
      */
     public boolean insert(Object key, Object value, Object version) throws CacheException {
@@ -78,7 +82,7 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Returns <code>false</code> since this is a non-strict read/write cache access strategy
      */
     public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
@@ -87,7 +91,7 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Removes the entry since this is a non-strict read/write cache strategy.
      */
     public boolean update(Object key, Object value, Object currentVersion, Object previousVersion)

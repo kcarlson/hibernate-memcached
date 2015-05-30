@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.region;
 
 import com.googlecode.hibernate.memcached.Memcache;
@@ -46,26 +47,27 @@ public class MemcachedNaturalIdRegion extends AbstractMemcachedRegion implements
 
     public NaturalIdRegionAccessStrategy buildAccessStrategy(AccessType accessType) throws CacheException {
 
-        if (AccessType.READ_ONLY.equals(accessType)) {
-            if (metadata.isMutable()) {
-                log.warn("read-only cache configured for mutable entity ["
-                        + getName() + "]");
-            }
-            return new ReadOnlyMemcachedNaturalIdRegionAccessStrategy(this, settings);
-        } else if (AccessType.READ_WRITE.equals(accessType)) {
-            return new ReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings, metadata);
-        } else if (AccessType.NONSTRICT_READ_WRITE.equals(accessType)) {
-            return new NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings);
-        } else if (AccessType.TRANSACTIONAL.equals(accessType)) {
-            return new TransactionalMemcachedNaturalIdRegionAccessStrategy(this, settings);
-        } else {
-            throw new IllegalArgumentException("unrecognized access strategy type [" + accessType + "]");
-        }
+        switch (accessType) {
 
+            case READ_ONLY:
+                if (metadata.isMutable()) {
+                    log.warn("read-only cache configured for mutable entity ["
+                            + getName() + "]");
+                }
+                return new ReadOnlyMemcachedNaturalIdRegionAccessStrategy(this, settings);
+            case READ_WRITE:
+                return new ReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings, metadata);
+            case NONSTRICT_READ_WRITE:
+                return new NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings);
+            case TRANSACTIONAL:
+                return new TransactionalMemcachedNaturalIdRegionAccessStrategy(this, settings);
+            default:
+                throw new IllegalArgumentException("unrecognized access strategy type [" + accessType + "]");
+        }
     }
 
     public boolean isTransactionAware() {
-        return true;
+        return false;
     }
 
     public CacheDataDescription getCacheDataDescription() {

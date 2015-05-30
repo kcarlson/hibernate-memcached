@@ -1,5 +1,8 @@
 package com.googlecode.hibernate.memcached
 
+import com.googlecode.hibernate.memcached.keystrategy.KeyStrategy
+import com.googlecode.hibernate.memcached.keystrategy.Md5KeyStrategy
+
 /**
  * DOCUMENT ME!
  *

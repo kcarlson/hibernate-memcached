@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.region;
 
 
@@ -31,17 +32,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
-/**
- *
- * @author kcarlson
- */
+
+
 public class MemcachedEntityRegion extends AbstractMemcachedRegion implements EntityRegion {
-    
+
     private final Logger log = LoggerFactory.getLogger(MemcachedEntityRegion.class);
 
     private final CacheDataDescription metadata;
     private final Settings settings;
-    
+
     public MemcachedEntityRegion(MemcachedCache cache, Settings settings, CacheDataDescription metadata, Properties properties, Memcache client) {
         super(cache);
         this.metadata = metadata;
@@ -49,32 +48,26 @@ public class MemcachedEntityRegion extends AbstractMemcachedRegion implements En
     }
 
     public EntityRegionAccessStrategy buildAccessStrategy(AccessType accessType) throws CacheException {
-        
-        if (AccessType.READ_ONLY.equals(accessType)) {
-            if (metadata.isMutable()) {
-                log.warn("read-only cache configured for mutable entity ["
-                                + getName() + "]");
-            }
-            return new ReadOnlyMemcachedEntityRegionAccessStrategy(this ,
-                    settings);
-        } else if (AccessType.READ_WRITE.equals(accessType)) {
-            return new ReadWriteMemcachedEntityRegionAccessStrategy(this ,
-                    settings);
-        } else if (AccessType.NONSTRICT_READ_WRITE.equals(accessType)) {
-            return new NonStrictReadWriteMemcachedEntityRegionAccessStrategy(
-                    this , settings);
-        } else if (AccessType.TRANSACTIONAL.equals(accessType)) {
-            return new TransactionalMemcachedEntityRegionAccessStrategy(
-                    this , cache, settings);
-        } else {
-            throw new IllegalArgumentException(
-                    "unrecognized access strategy type [" + accessType
-                            + "]");
+
+        switch (accessType) {
+            case READ_ONLY:
+                if (metadata.isMutable()) {
+                    log.warn("read-only cache configured for mutable entity [" + getName() + "]");
+                }
+                return new ReadOnlyMemcachedEntityRegionAccessStrategy(this, settings);
+            case READ_WRITE:
+                return new ReadWriteMemcachedEntityRegionAccessStrategy(this, settings);
+            case NONSTRICT_READ_WRITE:
+                return new NonStrictReadWriteMemcachedEntityRegionAccessStrategy(this, settings);
+            case TRANSACTIONAL:
+                return new TransactionalMemcachedEntityRegionAccessStrategy(this, cache, settings);
+            default:
+                throw new IllegalArgumentException("unrecognized access strategy type [" + accessType + "]");
         }
     }
 
     public boolean isTransactionAware() {
-        return true;
+        return false;
     }
 
     public CacheDataDescription getCacheDataDescription() {

@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
 import com.googlecode.hibernate.memcached.region.MemcachedCollectionRegion;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-/**
- *
- * @author kcarlson
- */
-public class NonStrictReadWriteMemcachedCollectionRegionAccessStrategy extends AbstractCollectionRegionAccessStrategy
-{
+public class NonStrictReadWriteMemcachedCollectionRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedCollectionRegion>
+        implements CollectionRegionAccessStrategy {
 
-    public NonStrictReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion aThis, Settings settings)
-    {
-        super(aThis, settings);
+    public NonStrictReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion region, Settings settings) {
+        super(region, settings);
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException
-    {
-       if (minimalPutOverride && region.getCache().get(key) != null) {
+    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
+        if (minimalPutOverride && region.getCache().get(key) != null) {
             return false;
         } else {
             region.getCache().put(key, value);
@@ -42,19 +39,16 @@ public class NonStrictReadWriteMemcachedCollectionRegionAccessStrategy extends A
         }
     }
 
-    public Object get(Object key, long txTimestamp) throws CacheException
-    {
+    public Object get(Object key, long txTimestamp) throws CacheException {
         return region.getCache().get(key);
     }
 
-    public SoftLock lockItem(Object key, Object version) throws CacheException
-    {
+    public SoftLock lockItem(Object key, Object version) throws CacheException {
         return null;
     }
 
-    public void unlockItem(Object key, SoftLock lock) throws CacheException
-    {
+    public void unlockItem(Object key, SoftLock lock) throws CacheException {
         region.getCache().remove(key);
     }
-    
+
 }

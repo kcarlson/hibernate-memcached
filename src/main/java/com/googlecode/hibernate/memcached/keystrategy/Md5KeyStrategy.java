@@ -13,18 +13,15 @@
  * limitations under the License.
  */
 
-package com.googlecode.hibernate.memcached.strategy;
+package com.googlecode.hibernate.memcached.keystrategy;
 
-import com.googlecode.hibernate.memcached.region.MemcachedCollectionRegion;
-import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
-import org.hibernate.cfg.Settings;
+import com.googlecode.hibernate.memcached.utils.StringUtils;
 
-public class ReadWriteMemcachedCollectionRegionAccessStrategy
-        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedCollectionRegion>
-        implements CollectionRegionAccessStrategy {
-
-    public ReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion region, Settings settings) {
-        super(region, settings, region.getCacheDataDescription());
+/**
+ * @author Ray Krueger
+ */
+public class Md5KeyStrategy extends DigestKeyStrategy {
+    protected String digest(String key) {
+        return StringUtils.md5Hex(key);
     }
-
 }
