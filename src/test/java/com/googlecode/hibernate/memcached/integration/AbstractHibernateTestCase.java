@@ -1,11 +1,12 @@
 package com.googlecode.hibernate.memcached.integration;
 
-import com.googlecode.hibernate.memcached.BaseTestCase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
+import org.junit.After;
+import org.junit.Before;
 
 import java.util.Properties;
 
@@ -14,10 +15,15 @@ import java.util.Properties;
  *
  * @author Ray Krueger
  */
-public abstract class AbstractHibernateTestCase extends BaseTestCase {
+public abstract class AbstractHibernateTestCase {
 
     protected Session session;
     protected Transaction transaction;
+
+    static {
+        System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.Log4JLogger");
+    }
+
 
     private Configuration getConfiguration() {
         AnnotationConfiguration config = new AnnotationConfiguration();
@@ -39,8 +45,7 @@ public abstract class AbstractHibernateTestCase extends BaseTestCase {
         props.setProperty("hibernate.connection.url", "jdbc:hsqldb:mem:test");
         props.setProperty("hibernate.connection.username", "sa");
         props.setProperty("hibernate.connection.password", "");
-        props.setProperty("hibernate.cache.provider_class",
-                com.googlecode.hibernate.memcached.MemcachedCacheProvider.class.getName());
+        props.setProperty("hibernate.cache.region.factory_class", com.googlecode.hibernate.memcached.MemcachedRegionFactory.class.getName());
         props.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         return props;
     }
@@ -52,8 +57,8 @@ public abstract class AbstractHibernateTestCase extends BaseTestCase {
     void setupBeforeTransaction() {
     }
 
-    @Override
-    protected void setUp() {
+    @Before
+    public void setUp() {
         setupBeforeTransaction();
         SessionFactory sessionFactory = getConfiguration().buildSessionFactory();
         session = sessionFactory.openSession();
@@ -67,8 +72,8 @@ public abstract class AbstractHibernateTestCase extends BaseTestCase {
     protected void tearDownInTransaction() {
     }
 
-    @Override
-    protected void tearDown() {
+    @After
+    public void tearDown() {
         try {
             tearDownInTransaction();
         } finally {

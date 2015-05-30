@@ -1,16 +1,16 @@
-/*
- * -----------------------------------------------------------------------------
- * Copyright (C) 2008-2011 by Bloo AB
- * SWEDEN, e-mail: info@bloo.se
+/* Copyright 2015, original authors
  *
- * This program may be used and/or copied only with the written permission
- * from Bloo AB, or in accordance with the terms and
- * conditions stipulated in the agreement/contract under which the program
- * has been supplied.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * All rights reserved.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * -----------------------------------------------------------------------------
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.googlecode.hibernate.memcached.strategy;
 
@@ -20,21 +20,28 @@ import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
 /**
- *
- * @author kcarlson
+ * Based on Ehcache specific non-strict read/write entity region access strategy.
  */
-public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends AbstractEntityRegionAccessStrategy
-{
+public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends AbstractEntityRegionAccessStrategy {
 
-    public NonStrictReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion aThis, Settings settings)
-    {
-        super(aThis, settings);
+    /**
+     * Create a non-strict read/write access strategy accessing the given collection region.
+     *
+     * @param region   The wrapped region
+     * @param settings The Hibernate settings
+     */
+    public NonStrictReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion region, Settings settings) {
+        super(region, settings);
+    }
+
+    public Object get(Object key, long txTimestamp) throws CacheException {
+        return region.getCache().get(key);
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException
-    {
-          if (minimalPutOverride && region.getCache().get(key) != null) {
+    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride)
+            throws CacheException {
+        if (minimalPutOverride && region.contains(key)) {
             return false;
         } else {
             region.getCache().put(key, value);
@@ -42,40 +49,61 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy extends Abstr
         }
     }
 
-    public boolean insert(Object key, Object value, Object version) throws CacheException
-    {
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Since this is a non-strict read/write strategy item locking is not used.
+     */
+    public SoftLock lockItem(Object key, Object version) throws CacheException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Since this is a non-strict read/write strategy item locking is not used.
+     */
+    public void unlockItem(Object key, SoftLock lock) throws CacheException {
+        region.getCache().remove(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Returns <code>false</code> since this is an asynchronous cache access strategy.
+     */
+    public boolean insert(Object key, Object value, Object version) throws CacheException {
         return false;
     }
 
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException
-    {
-        region.getCache().put(key, value);
-        return true;
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Returns <code>false</code> since this is a non-strict read/write cache access strategy
+     */
+    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
+        return false;
     }
 
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
-    {
-        throw new UnsupportedOperationException("Can't write to a readonly object");
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Removes the entry since this is a non-strict read/write cache strategy.
+     */
+    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion)
+            throws CacheException {
+        remove(key);
+        return false;
     }
 
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
-    {
-        throw new UnsupportedOperationException("Can't write to a readonly object");
+    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock)
+            throws CacheException {
+        unlockItem(key, lock);
+        return false;
     }
 
-    public Object get(Object key, long txTimestamp) throws CacheException
-    {
-        return region.getCache().get(key);
+    @Override
+    public void remove(Object key) throws CacheException {
+        region.getCache().remove(key);
     }
-
-    public SoftLock lockItem(Object key, Object version) throws CacheException
-    {
-        throw new UnsupportedOperationException("Can't write to a readonly object");
-    }
-
-    public void unlockItem(Object key, SoftLock lock) throws CacheException
-    {
-        //throw new UnsupportedOperationException("Can't write to a readonly object");
-    }
-    
 }

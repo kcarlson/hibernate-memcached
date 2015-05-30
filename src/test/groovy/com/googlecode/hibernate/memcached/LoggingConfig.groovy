@@ -9,7 +9,7 @@ import org.apache.log4j.BasicConfigurator
 class LoggingConfig {
 
     static {
-        System.setProperty "net.spy.log.LoggerImpl", "net.spy.log.Log4JLogger"
+        System.setProperty "net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.Log4JLogger"
     }
 
     public static void initializeLogging() {
