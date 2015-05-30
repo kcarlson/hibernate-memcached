@@ -21,6 +21,10 @@
         <groovy.version>1.6.3</groovy.version>
         <hsqldb.version>2.3.2</hsqldb.version>
         <hibernate-core.version>4.0.1.Final</hibernate-core.version>
+        <junit.version>4.4</junit.version>
+        <slf4j-api.version>1.5.6</slf4j-api.version>
+        <slf4j-log4j12.version>1.5.6</slf4j-log4j12.version>
+        <spymemcached.version>2.11.6</spymemcached.version>
     </properties>
 
     <scm>
@@ -29,22 +33,6 @@
         <url>http://github.com/raykrueger/hibernate-memcached/</url>
     </scm>
 
-    <distributionManagement>
-        <!-- use the following if you're not using a snapshot version. -->
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>googlecode</id>
-            <url>svn:https://raykrueger.googlecode.com/svn/repository</url>
-            <!--<url>file://distribution</url>-->
-        </repository>
-        <!-- use the following if you ARE using a snapshot version. -->
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>googlecode</id>
-            <url>svn:https://raykrueger.googlecode.com/svn/repository</url>
-            <!--<url>file://distribution</url>-->
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -165,9 +153,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>spy</groupId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.spy</groupId>
             <artifactId>spymemcached</artifactId>
-            <version>2.7.1</version>
+            <version>${spymemcached.version}</version>
         </dependency>
         <dependency>
             <groupId>com.danga</groupId>
@@ -178,27 +172,21 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.6</version>
+            <version>${slf4j-api.version}</version>
         </dependency>
         
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate-core.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Test dependencies-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.6</version>
+            <version>${slf4j-log4j12.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

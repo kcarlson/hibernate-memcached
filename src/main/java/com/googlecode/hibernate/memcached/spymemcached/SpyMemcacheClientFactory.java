@@ -152,8 +152,8 @@ public class SpyMemcacheClientFactory implements MemcacheClientFactory {
 
     public HashAlgorithm getHashAlgorithm() {
         return properties.getEnum(PROP_HASH_ALGORITHM,
-                HashAlgorithm.class,
-                HashAlgorithm.NATIVE_HASH);
+                DefaultHashAlgorithm.class,
+                DefaultHashAlgorithm.NATIVE_HASH);
     }
 
     public String getConnectionFactoryName() {
