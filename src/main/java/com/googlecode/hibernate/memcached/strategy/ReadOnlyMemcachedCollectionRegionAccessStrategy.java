@@ -24,7 +24,9 @@ import org.hibernate.cfg.Settings;
 /**
  * @author kcarlson
  */
-public class ReadOnlyMemcachedCollectionRegionAccessStrategy extends AbstractMemcachedAccessStrategy<MemcachedCollectionRegion> implements CollectionRegionAccessStrategy {
+public class ReadOnlyMemcachedCollectionRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedCollectionRegion>
+        implements CollectionRegionAccessStrategy {
 
     public ReadOnlyMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion aThis, Settings settings) {
         super(aThis, settings);

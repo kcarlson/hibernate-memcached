@@ -28,6 +28,9 @@ import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author kcarlson
+ */
 public abstract class AbstractReadWriteMemcachedAccessStrategy<T extends AbstractMemcachedRegion> extends AbstractMemcachedAccessStrategy<T> {
 
     private final Logger log = LoggerFactory.getLogger(AbstractReadWriteMemcachedAccessStrategy.class);
