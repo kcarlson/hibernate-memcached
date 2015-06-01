@@ -1,20 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.googlecode</groupId>
     <artifactId>hibernate-memcached</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
     <name>hibernate-memcached</name>
     <description>A library for using Memcached as a second level distributed cache in Hibernate.</description>
     <url>http://code.google.com/p/hibernate-memcached/</url>
     <packaging>jar</packaging>
-
-    <developers>
-        <developer>
-            <name>Ray Krueger</name>
-            <url>http://raykrueger.blogspot.com/</url>
-            <timezone>-6</timezone>
-        </developer>
-    </developers>
 
     <licenses>
         <license>
@@ -23,90 +17,55 @@
         </license>
     </licenses>
 
-    <repositories>
-        <repository>
-            <id>mine</id>
-            <name>mine</name>
-            <url>http://raykrueger.googlecode.com/svn/repository</url>
-        </repository>
-        <repository>
-            <id>maven2-repository</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-        </repository>
-        <repository>
-          <id>couchbase</id>
-          <name>Spymemcached repository</name>
-          <url>http://files.couchbase.com/maven2/</url>
-        </repository>
-    </repositories>
+    <developers>
+        <developer>
+            <name>Ray Krueger</name>
+            <url>http://raykrueger.blogspot.com/</url>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Mihai Costin</name>
+            <url>http://mihaicostin.github.io/</url>
+            <timezone>+3</timezone>
+        </developer>
+    </developers>
 
     <scm>
-        <developerConnection>scm:git:git@github.com:raykrueger/hibernate-memcached.git</developerConnection>
-        <connection>scm:git:git@github.com:raykrueger/hibernate-memcached.git</connection>
-        <url>http://github.com/raykrueger/hibernate-memcached/</url>
+        <connection>scm:git:git@github.com:mihaicostin/hibernate-memcached.git</connection>
+        <developerConnection>scm:git:git@github.com:mihaicostin/hibernate-memcached.git</developerConnection>
+        <url>https://github.com/mihaicostin/hibernate-memcached</url>
     </scm>
 
     <distributionManagement>
-        <!-- use the following if you're not using a snapshot version. -->
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>googlecode</id>
-            <url>svn:https://raykrueger.googlecode.com/svn/repository</url>
-            <!--<url>file://distribution</url>-->
-        </repository>
-        <!-- use the following if you ARE using a snapshot version. -->
         <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>googlecode</id>
-            <url>svn:https://raykrueger.googlecode.com/svn/repository</url>
-            <!--<url>file://distribution</url>-->
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <properties>
+        <hibernate-core.version>4.3.10.Final</hibernate-core.version>
+        <spymemcached.version>2.11.6</spymemcached.version>
+        <slf4j-api.version>1.5.6</slf4j-api.version>
+
+        <junit.version>4.4</junit.version>
+        <gmaven.version>1.5</gmaven.version>
+        <groovy.version>1.6.3</groovy.version>
+        <hsqldb.version>2.3.2</hsqldb.version>
+        <slf4j-log4j12.version>1.5.6</slf4j-log4j12.version>
+    </properties>
+
     <build>
-        <!--extensions>
-            <extension>
-                <groupId>org.jvnet.wagon-svn</groupId>
-                <artifactId>wagon-svn</artifactId>
-                <version>1.8</version>
-            </extension>
-        </extensions-->
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -121,7 +80,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>groovy-maven-plugin</artifactId>
-                <version>1.0-rc-5</version>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <goals>
@@ -131,98 +90,171 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Allow writing tests in Groovy -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.2</version>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>${gmaven.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <providerSelection>1.7</providerSelection>
+                    <source>src/main/groovy</source>
+                </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.2</version>
+                        <groupId>org.codehaus.gmaven.runtime</groupId>
+                        <artifactId>gmaven-runtime-2.0</artifactId>
+                        <version>${gmaven.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-all</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <!-- Releasing to OSSRH -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-9</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-scm-plugin</artifactId>
-                        <version>1.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-api</artifactId>
-                        <version>1.2</version>
-                    </dependency>
-                </dependencies>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
             </plugin>
+
         </plugins>
     </build>
 
     <dependencies>
+
         <dependency>
-            <groupId>spy</groupId>
-            <artifactId>spymemcached</artifactId>
-            <version>2.7.1</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-core.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.danga</groupId>
-            <artifactId>java_memcached</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
+            <groupId>net.spy</groupId>
+            <artifactId>spymemcached</artifactId>
+            <version>${spymemcached.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.6</version>
+            <version>${slf4j-api.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>
-        <!--dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.6.ga</version>
-            <scope>compile</scope>
-        </dependency-->
 
-        <!--dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.3.1.GA</version>
-            <scope>test</scope>
-        </dependency-->
-        
+
+        <!-- Test dependencies-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.6</version>
+            <version>${slf4j-log4j12.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>hsqldb</groupId>
+            <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
+            <version>${hsqldb.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.6.3</version>
+            <version>${groovy.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.1</version>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+
+
 </project>

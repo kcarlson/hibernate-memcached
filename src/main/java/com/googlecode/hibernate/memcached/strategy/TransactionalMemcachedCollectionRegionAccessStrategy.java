@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,38 +12,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
-import com.googlecode.hibernate.memcached.MemcachedCache;
 import com.googlecode.hibernate.memcached.region.MemcachedCollectionRegion;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-/**
- *
- * @author kcarlson
- */
-public class TransactionalMemcachedCollectionRegionAccessStrategy extends AbstractCollectionRegionAccessStrategy {
-    private final MemcachedCache cache;
+public class TransactionalMemcachedCollectionRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedCollectionRegion>
+        implements CollectionRegionAccessStrategy {
 
-    public TransactionalMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion aThis, MemcachedCache cache, Settings settings) {
-        super(aThis, settings);
-        this.cache = cache;
+    public TransactionalMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion region, Settings settings) {
+        super(region, settings);
     }
 
     @Override
     public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
-        if (minimalPutOverride && cache.get(key) != null) {
+        if (minimalPutOverride && region.getCache().get(key) != null) {
             return false;
         }
-        //OptimisticCache? versioning?
-        cache.put(key, value);
+
+        region.getCache().put(key, value);
         return true;
     }
 
     public Object get(Object key, long txTimestamp) throws CacheException {
-        return cache.get(key);
+        return region.getCache().get(key);
     }
 
     public SoftLock lockItem(Object key, Object version) throws CacheException {
@@ -52,5 +49,5 @@ public class TransactionalMemcachedCollectionRegionAccessStrategy extends Abstra
 
     public void unlockItem(Object key, SoftLock lock) throws CacheException {
     }
-    
+
 }

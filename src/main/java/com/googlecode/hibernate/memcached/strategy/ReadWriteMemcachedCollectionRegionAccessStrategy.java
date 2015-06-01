@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,31 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.strategy;
 
-import com.googlecode.hibernate.memcached.region.AbstractMemcachedRegion;
 import com.googlecode.hibernate.memcached.region.MemcachedCollectionRegion;
-import com.googlecode.hibernate.memcached.strategy.AbstractReadWriteMemcachedAccessStrategy;
-import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.cfg.Settings;
 
-/**
- *
- * @author kcarlson
- */
 public class ReadWriteMemcachedCollectionRegionAccessStrategy
-        extends AbstractReadWriteMemcachedAccessStrategy<AbstractMemcachedRegion> implements CollectionRegionAccessStrategy
-{
+        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedCollectionRegion>
+        implements CollectionRegionAccessStrategy {
 
-    public ReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion aThis, Settings settings)
-    {
-        super(aThis, settings, aThis.getCacheDataDescription());
-    }
-
-    public CollectionRegion getRegion()
-    {
-        return (MemcachedCollectionRegion)region;
+    public ReadWriteMemcachedCollectionRegionAccessStrategy(MemcachedCollectionRegion region, Settings settings) {
+        super(region, settings, region.getCacheDataDescription());
     }
 
 }

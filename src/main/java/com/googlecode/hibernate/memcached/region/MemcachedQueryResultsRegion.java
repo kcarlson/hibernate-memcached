@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,26 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.region;
 
-import com.googlecode.hibernate.memcached.Memcache;
 import com.googlecode.hibernate.memcached.MemcachedCache;
-import com.googlecode.hibernate.memcached.MemcachedCacheProvider;
-import java.util.Properties;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.QueryResultsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author kcarlson
- */
 public class MemcachedQueryResultsRegion extends AbstractMemcachedRegion implements QueryResultsRegion {
-    
-    private final Logger log = LoggerFactory.getLogger(MemcachedCacheProvider.class);
 
-    public MemcachedQueryResultsRegion(MemcachedCache cache, Properties properties, Memcache client) {
+    private final Logger log = LoggerFactory.getLogger(MemcachedQueryResultsRegion.class);
+
+    public MemcachedQueryResultsRegion(MemcachedCache cache) {
         super(cache);
     }
 

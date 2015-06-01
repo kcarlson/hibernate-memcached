@@ -1,3 +1,18 @@
+/* Copyright 2015, the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.googlecode.hibernate.memcached.spymemcached;
 
 import com.googlecode.hibernate.memcached.Config;
@@ -9,8 +24,7 @@ import net.spy.memcached.auth.AuthDescriptor;
 import net.spy.memcached.auth.PlainCallbackHandler;
 
 /**
- * Parses hibernate properties to produce a MemcachedClient.<br/>
- * See {@link com.googlecode.hibernate.memcached.MemcachedCacheProvider} for property details.
+ * Parses hibernate properties to produce a MemcachedClient.
  *
  * @author Ray Krueger
  */
@@ -123,8 +137,7 @@ public class SpyMemcacheClientFactory implements MemcacheClientFactory {
         if (username == null || password == null) {
             return null;
         }
-        return new AuthDescriptor(new String[] { "PLAIN" },
-                new PlainCallbackHandler(username, password));
+        return new AuthDescriptor(new String[]{"PLAIN"}, new PlainCallbackHandler(username, password));
     }
 
     public String getServerList() {
@@ -132,18 +145,15 @@ public class SpyMemcacheClientFactory implements MemcacheClientFactory {
     }
 
     public int getOperationQueueLength() {
-        return properties.getInt(PROP_OPERATION_QUEUE_LENGTH,
-                DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN);
+        return properties.getInt(PROP_OPERATION_QUEUE_LENGTH, DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN);
     }
 
     public int getReadBufferSize() {
-        return properties.getInt(PROP_READ_BUFFER_SIZE,
-                DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE);
+        return properties.getInt(PROP_READ_BUFFER_SIZE, DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE);
     }
 
     public long getOperationTimeoutMillis() {
-        return properties.getLong(PROP_OPERATION_TIMEOUT,
-                DefaultConnectionFactory.DEFAULT_OPERATION_TIMEOUT);
+        return properties.getLong(PROP_OPERATION_TIMEOUT, DefaultConnectionFactory.DEFAULT_OPERATION_TIMEOUT);
     }
 
     public boolean isDaemonMode() {
@@ -151,14 +161,11 @@ public class SpyMemcacheClientFactory implements MemcacheClientFactory {
     }
 
     public HashAlgorithm getHashAlgorithm() {
-        return properties.getEnum(PROP_HASH_ALGORITHM,
-                HashAlgorithm.class,
-                HashAlgorithm.NATIVE_HASH);
+        return properties.getEnum(PROP_HASH_ALGORITHM, DefaultHashAlgorithm.class, DefaultHashAlgorithm.NATIVE_HASH);
     }
 
     public String getConnectionFactoryName() {
-        return properties.get(PROP_CONNECTION_FACTORY,
-                DefaultConnectionFactory.class.getSimpleName());
+        return properties.get(PROP_CONNECTION_FACTORY, DefaultConnectionFactory.class.getSimpleName());
     }
 
     protected PropertiesHelper getProperties() {

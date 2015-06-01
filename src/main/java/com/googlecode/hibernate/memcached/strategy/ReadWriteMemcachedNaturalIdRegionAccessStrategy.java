@@ -15,30 +15,32 @@
 
 package com.googlecode.hibernate.memcached.strategy;
 
-import com.googlecode.hibernate.memcached.region.MemcachedEntityRegion;
+import com.googlecode.hibernate.memcached.region.MemcachedNaturalIdRegion;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
+import org.hibernate.cache.spi.CacheDataDescription;
+import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-public class ReadWriteMemcachedEntityRegionAccessStrategy
-        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedEntityRegion>
-        implements EntityRegionAccessStrategy {
+public class ReadWriteMemcachedNaturalIdRegionAccessStrategy
+        extends AbstractReadWriteMemcachedAccessStrategy<MemcachedNaturalIdRegion>
+        implements NaturalIdRegionAccessStrategy {
 
-    public ReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion region, Settings settings) {
-        super(region, settings, region.getCacheDataDescription());
+    public ReadWriteMemcachedNaturalIdRegionAccessStrategy(MemcachedNaturalIdRegion region, Settings settings, CacheDataDescription metadata) {
+        super(region, settings, metadata);
     }
 
-    public boolean insert(Object key, Object value, Object version) throws CacheException {
+    public boolean insert(Object key, Object value) throws CacheException {
         return false;
     }
 
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(Object key, Object value) throws CacheException {
         region.getCache().lock(key);
         try {
             Lockable item = (Lockable) region.getCache().get(key);
+
             if (item == null) {
-                region.getCache().put(key, new Item(value, version, region.nextTimestamp()));
+                region.getCache().put(key, new Item(value, null, region.getCache().nextTimestamp()));
                 return true;
             } else {
                 return false;
@@ -48,32 +50,30 @@ public class ReadWriteMemcachedEntityRegionAccessStrategy
         }
     }
 
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
+    public boolean update(Object key, Object value) throws CacheException {
         return false;
     }
 
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
-        //what should we do with previousVersion here?
+    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException {
         region.getCache().lock(key);
         try {
             Lockable item = (Lockable) region.getCache().get(key);
 
             if (item != null && item.isUnlockable(lock)) {
-                Lock lockItem = (Lock) item;
+                final Lock lockItem = (Lock) item;
                 if (lockItem.wasLockedConcurrently()) {
                     decrementLock(key, lockItem);
                     return false;
                 } else {
-                    region.getCache().put(key, new Item(value, currentVersion, region.nextTimestamp()));
+                    region.getCache().put(key, new Item(value, null, region.nextTimestamp()));
                     return true;
                 }
             } else {
-                super.handleLockExpiry(key, null);
+                handleLockExpiry(key, item);
                 return false;
             }
         } finally {
             region.getCache().unlock(key);
         }
     }
-
 }

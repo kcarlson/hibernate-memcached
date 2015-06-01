@@ -12,18 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.googlecode.hibernate.memcached.keystrategy;
 
-package com.googlecode.hibernate.memcached;
+import com.googlecode.hibernate.memcached.MemcachedCache;
 
 /**
- * Simple interface used to abstract the creation of the MemcachedClient
- * All implementers must have a constructor that takes an instance of
- * {@link com.googlecode.hibernate.memcached.PropertiesHelper}.
+ * Strategy interface for parsing the parts used by {@link MemcachedCache} to generate cache keys.
  *
  * @author Ray Krueger
  */
-public interface MemcacheClientFactory {
+public interface KeyStrategy {
 
-    Memcache createMemcacheClient() throws Exception;
-
+    String toKey(String regionName, long clearIndex, Object key);
 }

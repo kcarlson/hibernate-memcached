@@ -1,4 +1,4 @@
-/* Copyright 2008 Ray Krueger
+/* Copyright 2015, the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,25 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.hibernate.memcached.region;
 
 import com.googlecode.hibernate.memcached.MemcachedCache;
-import java.util.Map;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.Region;
 
-/**
- *
- * @author kcarlson
- */
+import java.util.Map;
+
 public abstract class AbstractMemcachedRegion implements Region {
 
     protected MemcachedCache cache;
-    
+
     AbstractMemcachedRegion(MemcachedCache cache) {
         this.cache = cache;
-    }       
-    
+    }
+
     public String getName() {
         return cache.getRegionName();
     }
@@ -66,11 +64,10 @@ public abstract class AbstractMemcachedRegion implements Region {
     public int getTimeout() {
         return cache.getTimeout();
     }
-    
-    public MemcachedCache getCache()
-    {
+
+    public MemcachedCache getCache() {
         return cache;
     }
-    
-    
+
+
 }

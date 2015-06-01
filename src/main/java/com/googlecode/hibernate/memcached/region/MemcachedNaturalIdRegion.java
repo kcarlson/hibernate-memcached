@@ -15,52 +15,52 @@
 
 package com.googlecode.hibernate.memcached.region;
 
-
 import com.googlecode.hibernate.memcached.Memcache;
 import com.googlecode.hibernate.memcached.MemcachedCache;
-import com.googlecode.hibernate.memcached.strategy.NonStrictReadWriteMemcachedEntityRegionAccessStrategy;
-import com.googlecode.hibernate.memcached.strategy.ReadOnlyMemcachedEntityRegionAccessStrategy;
-import com.googlecode.hibernate.memcached.strategy.ReadWriteMemcachedEntityRegionAccessStrategy;
-import com.googlecode.hibernate.memcached.strategy.TransactionalMemcachedEntityRegionAccessStrategy;
+import com.googlecode.hibernate.memcached.strategy.NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy;
+import com.googlecode.hibernate.memcached.strategy.ReadOnlyMemcachedNaturalIdRegionAccessStrategy;
+import com.googlecode.hibernate.memcached.strategy.ReadWriteMemcachedNaturalIdRegionAccessStrategy;
+import com.googlecode.hibernate.memcached.strategy.TransactionalMemcachedNaturalIdRegionAccessStrategy;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
-import org.hibernate.cache.spi.EntityRegion;
+import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.AccessType;
-import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
+import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cfg.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
+public class MemcachedNaturalIdRegion extends AbstractMemcachedRegion implements NaturalIdRegion {
 
-public class MemcachedEntityRegion extends AbstractMemcachedRegion implements EntityRegion {
-
-    private final Logger log = LoggerFactory.getLogger(MemcachedEntityRegion.class);
+    private final Logger log = LoggerFactory.getLogger(MemcachedNaturalIdRegion.class);
 
     private final CacheDataDescription metadata;
     private final Settings settings;
 
-    public MemcachedEntityRegion(MemcachedCache cache, Settings settings, CacheDataDescription metadata, Properties properties, Memcache client) {
+    public MemcachedNaturalIdRegion(MemcachedCache cache, Settings settings, CacheDataDescription metadata, Properties properties, Memcache client) {
         super(cache);
         this.metadata = metadata;
         this.settings = settings;
     }
 
-    public EntityRegionAccessStrategy buildAccessStrategy(AccessType accessType) throws CacheException {
+    public NaturalIdRegionAccessStrategy buildAccessStrategy(AccessType accessType) throws CacheException {
 
         switch (accessType) {
+
             case READ_ONLY:
                 if (metadata.isMutable()) {
-                    log.warn("read-only cache configured for mutable entity [" + getName() + "]");
+                    log.warn("read-only cache configured for mutable entity ["
+                            + getName() + "]");
                 }
-                return new ReadOnlyMemcachedEntityRegionAccessStrategy(this, settings);
+                return new ReadOnlyMemcachedNaturalIdRegionAccessStrategy(this, settings);
             case READ_WRITE:
-                return new ReadWriteMemcachedEntityRegionAccessStrategy(this, settings);
+                return new ReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings, metadata);
             case NONSTRICT_READ_WRITE:
-                return new NonStrictReadWriteMemcachedEntityRegionAccessStrategy(this, settings);
+                return new NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy(this, settings);
             case TRANSACTIONAL:
-                return new TransactionalMemcachedEntityRegionAccessStrategy(this, cache, settings);
+                return new TransactionalMemcachedNaturalIdRegionAccessStrategy(this, settings);
             default:
                 throw new IllegalArgumentException("unrecognized access strategy type [" + accessType + "]");
         }
@@ -73,5 +73,4 @@ public class MemcachedEntityRegion extends AbstractMemcachedRegion implements En
     public CacheDataDescription getCacheDataDescription() {
         return metadata;
     }
-
 }

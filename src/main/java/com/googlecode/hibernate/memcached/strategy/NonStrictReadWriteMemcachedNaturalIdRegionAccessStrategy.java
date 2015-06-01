@@ -15,26 +15,21 @@
 
 package com.googlecode.hibernate.memcached.strategy;
 
-import com.googlecode.hibernate.memcached.region.MemcachedEntityRegion;
+import com.googlecode.hibernate.memcached.region.MemcachedNaturalIdRegion;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
+import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
 
-/**
- * Based on Ehcache specific non-strict read/write entity region access strategy.
- */
-public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy
-        extends AbstractMemcachedAccessStrategy<MemcachedEntityRegion>
-        implements EntityRegionAccessStrategy {
+
+public class NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy
+        extends AbstractMemcachedAccessStrategy<MemcachedNaturalIdRegion>
+        implements NaturalIdRegionAccessStrategy {
 
     /**
-     * Create a non-strict read/write access strategy accessing the given collection region.
-     *
-     * @param region   The wrapped region
-     * @param settings The Hibernate settings
+     * Create a non-strict read/write access strategy accessing the given NaturalId region.
      */
-    public NonStrictReadWriteMemcachedEntityRegionAccessStrategy(MemcachedEntityRegion region, Settings settings) {
+    public NonStrictReadWriteMemcachedNaturalIdRegionAccessStrategy(MemcachedNaturalIdRegion region, Settings settings) {
         super(region, settings);
     }
 
@@ -43,19 +38,19 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride)
-            throws CacheException {
-        if (minimalPutOverride && region.contains(key)) {
+    public boolean putFromLoad(Object key,
+                               Object value,
+                               long txTimestamp,
+                               Object version,
+                               boolean minimalPutOverride) throws CacheException {
+        if (minimalPutOverride && region.contains(key))
             return false;
-        } else {
-            region.getCache().put(key, value);
-            return true;
-        }
+
+        region.getCache().put(key, value);
+        return true;
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
      * Since this is a non-strict read/write strategy item locking is not used.
      */
     public SoftLock lockItem(Object key, Object version) throws CacheException {
@@ -63,8 +58,6 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
      * Since this is a non-strict read/write strategy item locking is not used.
      */
     public void unlockItem(Object key, SoftLock lock) throws CacheException {
@@ -72,41 +65,32 @@ public class NonStrictReadWriteMemcachedEntityRegionAccessStrategy
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
      * Returns <code>false</code> since this is an asynchronous cache access strategy.
      */
-    public boolean insert(Object key, Object value, Object version) throws CacheException {
-        return false;
+    public boolean insert(Object key, Object value) throws CacheException {
+        return true;
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
      * Returns <code>false</code> since this is a non-strict read/write cache access strategy
      */
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(Object key, Object value) throws CacheException {
         return false;
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
      * Removes the entry since this is a non-strict read/write cache strategy.
      */
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion)
-            throws CacheException {
+    public boolean update(Object key, Object value) throws CacheException {
         remove(key);
         return false;
     }
 
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock)
-            throws CacheException {
+    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException {
         unlockItem(key, lock);
         return false;
     }
 
-    @Override
     public void remove(Object key) throws CacheException {
         region.getCache().remove(key);
     }

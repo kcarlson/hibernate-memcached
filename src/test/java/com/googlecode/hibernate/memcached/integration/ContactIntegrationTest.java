@@ -1,11 +1,15 @@
 package com.googlecode.hibernate.memcached.integration;
 
 import org.hibernate.Criteria;
-import static org.hibernate.criterion.Restrictions.eq;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.hibernate.criterion.Restrictions.eq;
 
 public class ContactIntegrationTest extends AbstractHibernateTestCase {
 
@@ -30,11 +34,13 @@ public class ContactIntegrationTest extends AbstractHibernateTestCase {
         return props;
     }
 
+    @Test
     public void test() {
         Contact fromDB = (Contact) session.get(Contact.class, ray.getId());
         assertNotNull(fromDB);
     }
 
+    @Test
     public void test_query_cache() {
         Criteria criteria = session.createCriteria(Contact.class)
                 .add(eq("firstName", "Ray"))
@@ -52,6 +58,7 @@ public class ContactIntegrationTest extends AbstractHibernateTestCase {
         assertEquals(criteria.uniqueResult(), criteria.uniqueResult());
     }
 
+    @Test
     public void test_query_cache_with_date() throws Exception {
 
         Thread.sleep(100);
