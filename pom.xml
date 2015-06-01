@@ -33,7 +33,7 @@
     <scm>
         <connection>scm:git:git@github.com:mihaicostin/hibernate-memcached.git</connection>
         <developerConnection>scm:git:git@github.com:mihaicostin/hibernate-memcached.git</developerConnection>
-        <url>git@github.com:mihaicostin/hibernate-memcached.git</url>
+        <url>https://github.com/mihaicostin/hibernate-memcached</url>
     </scm>
 
     <distributionManagement>
